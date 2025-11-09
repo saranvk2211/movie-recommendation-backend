@@ -7,8 +7,14 @@ require('dotenv').config();
 
 const app = express();
 
-// Middleware
-app.use(cors());
+// Middleware - REMOVED DUPLICATE CORS HERE
+app.use(cors({
+  origin: [
+    'https://your-frontend-app.vercel.app', // Your Vercel URL
+    'http://localhost:3000' // For local development
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 // MongoDB Connection
@@ -17,14 +23,6 @@ mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-// CORS configuration for production
-app.use(cors({
-  origin: [
-    'https://your-frontend-app.vercel.app', // Your Vercel URL
-    'http://localhost:3000' // For local development
-  ],
-  credentials: true
-}));
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -138,25 +136,42 @@ const auth = async (req, res, next) => {
 };
 
 // Routes
-// Routes
 app.get('/', (req, res) => {
   res.json({ message: 'Movie Recommendation API is running!' });
 });
 
 // Your existing routes here...
 app.get('/api/movies', (req, res) => {
-  // Your movie logic
+  // Your movie logic - ADD TEMPORARY DATA TO PREVENT EMPTY RESPONSE
+  res.json([
+    { 
+      id: 1,
+      title: 'Sample Movie 1', 
+      genre: 'Action', 
+      year: 2023,
+      rating: 8.5
+    },
+    { 
+      id: 2,
+      title: 'Sample Movie 2', 
+      genre: 'Drama', 
+      year: 2023,
+      rating: 8.0
+    }
+  ]);
 });
 
 app.post('/api/recommendations', (req, res) => {
-  // Your recommendation logic
-});
-
-// Dynamic port for Railway
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
+  // Your recommendation logic - ADD TEMPORARY DATA
+  res.json([
+    { 
+      id: 3,
+      title: 'Recommended Movie 1', 
+      genre: 'Thriller', 
+      year: 2023,
+      rating: 8.7
+    }
+  ]);
 });
 
 // Register User
@@ -344,7 +359,11 @@ app.get('/api/user-reviews', auth, async (req, res) => {
   }
 });
 
+// REMOVED DUPLICATE PORT DECLARATION AND app.listen() FROM HERE
+
+// Dynamic port for Railway - ONLY ONE PORT DECLARATION
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
-});.
+});
