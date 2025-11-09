@@ -17,8 +17,9 @@ app.use(cors({
 }));
 app.use(express.json());
 
+
 // MongoDB Connection
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/movieapp';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/moviedb';
 mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
